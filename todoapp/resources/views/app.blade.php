@@ -10,9 +10,10 @@
 
 <body>
   <div>
-    <Show :event="event"/>
-    <Index/>
+  <Index :event="event"/>
+    <Show />
     <Create/>
+    <Update/>
   </div>
   @inertia
 </body>

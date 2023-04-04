@@ -4,16 +4,16 @@
     <h2>{{ my_event ? my_event.title : 'Aucun événement trouvé' }}</h2>
     <p>Date de début : {{ my_event ? my_event.start_date : 'Inconnue' }}</p>
     <p>{{ my_event ? my_event.description : 'Aucune description disponible' }}</p>
-
     <p>Date de fin : {{ my_event ? my_event.end_date : 'Inconnue' }}</p>
 
     <div class="button-group">
-      <button class="button is-info" @click="goBack">Retour</button>
-      <button class="button is-danger" @click="deleteEvent">Supprimer</button>
+      <button class="button is-primary" @click="goBack">Retour</button>
+      <button class="button is-danger" @click="deleteEvent(my_event.id)">Supprimer</button>
+      <button class="button is-warning" @click="editEvent(my_event.id)">Modifier</button>
     </div>
+
   </div>
 </template>
-
 <style>
 .event-show {
   padding: 20px;
@@ -37,15 +37,55 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.button-group {
+  margin-top: 20px;
+}
+
+.button {
+  margin-right: 10px;
+}
+
+.button.is-warning {
+  background-color: #FFC107;
+  color: #FFFFFF;
+  border: none;
+}
+
+.button.is-danger {
+  background-color: #F44336;
+  color: #FFFFFF;
+  border: none;
+}
+
+.button.is-primary {
+  background-color: #209cee;
+  color: #FFFFFF;
+  border: none;
+}
 </style>
 
 <script setup>
 import router from '../../router'
+import { Inertia } from '@inertiajs/inertia'
 
 const props = defineProps({ my_event: Object })
 
-const deleteEvent = () => {
-  // TODO: Implémenter la suppression de l'événement sélectionné
+const deleteEvent = (eventId) => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+    Inertia.delete(`/events/${eventId}`)
+      .then(() => {
+        goBack()
+      });
+  }
+};
+
+const editEvent = (eventId) => {
+  router.push({ path: `/update/event/${eventId}` })
+    .then(() => {
+      // rafraîchir la page après modification
+      location.reload();
+    })
 }
 
 const goBack = () => {
