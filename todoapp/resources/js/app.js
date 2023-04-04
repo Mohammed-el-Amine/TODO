@@ -1,12 +1,18 @@
-import { createApp } from 'vue'
-import Show from './Pages/Event/Show.vue'
 import router from './router.js'
 
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
 
-const app = createApp({})
+createInertiaApp({
+  resolve: name => {
+    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+    return pages[`./Pages/${name}.vue`]
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(router)
+      .mount(el)
+  },
+})
 
-app.use(router)
-
-app.component('show',Show)
-
-app.mount('#app')

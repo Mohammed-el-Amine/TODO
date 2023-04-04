@@ -10,31 +10,27 @@ class EventsController extends Controller
 {
     public function show($id)
     {
-        $event = Event::find($id);
+        $my_event = Event::find($id);
 
-        // Vérifier si l'événement existe
-        if (!$event) {
+        // Vérifie si l'événement existe
+        if (!$my_event) {
+            abort(404);
+        }
+        // dump($my_event);
+        return Inertia::render('Event/Show', ["my_event" => $my_event]);
+    }
+
+
+    public function index()
+    {
+        $my_events = Event::all();
+
+        // dump($my_events);
+        if (!$my_events) {
             abort(404);
         }
 
-        $nextEvent = Event::where('start_date', '>', $event->start_date)
-            ->orderBy('start_date')
-            ->first();
-
-        return Inertia::render('Event/Show', [
-            'event' => [
-                'id' => $event->id,
-                'title' => $event->title,
-                'start_date' => $event->start_date,
-                'description' => $event->description,
-            ],
-            'nextEvent' => [
-                'id' => optional($nextEvent)->id,
-                'title' => optional($nextEvent)->title,
-                'start_date' => optional($nextEvent)->start_date,
-                'description' => optional($nextEvent)->description,
-            ],
-        ]);
+        return Inertia::render('Event/Index', ["my_events" => $my_events]);
     }
 
     public function create()

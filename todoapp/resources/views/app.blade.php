@@ -9,8 +9,10 @@
 </head>
 
 <body>
-  <div id="app">
+  <div>
     <Show :event="event"/>
+    <Index/>
+    <Create/>
   </div>
   @inertia
 </body>

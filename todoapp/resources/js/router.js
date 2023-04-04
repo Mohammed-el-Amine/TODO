@@ -1,20 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Show from './Pages/Event/Show.vue'
-
-// const routes = [
-//   {
-//     path: '/event/:id',
-//     name: 'event.show',
-//     component: Show,
-//     props: true
-//   }
-// ]
+import Create from './Pages/Event/Create.vue'
 
 const router = createRouter({
   history: createWebHistory(),
-  routes :[
-  { path : '/event/:id', component: Show },
+  routes: [
+    { path: '/event/:id', component: Show },
+    { path: '/event' },
+    { path: '/add/event' }
   ]
-})
+});
 
 export default router

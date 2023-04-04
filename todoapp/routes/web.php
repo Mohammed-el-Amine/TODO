@@ -14,7 +14,10 @@ use App\Http\Controllers\EventsController;
 |
 */
 
-Route::get('/event/{id}', [EventsController::class, 'show'])->name('events.show');;
+Route::get('/event/{id}', [EventsController::class, 'show'])->name('events.show');
+Route::get('/event', [EventsController::class, 'index'])->name('events.index');
+Route::get('/add/event',[EventsController::class, 'create'])->name(('events.create'));
+Route::post('/add/event', [EventsController::class, 'store'])->name('events.store');
 
 Route::fallback(function () {
     abort(404);
