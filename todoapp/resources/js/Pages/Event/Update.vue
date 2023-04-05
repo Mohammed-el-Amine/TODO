@@ -19,16 +19,18 @@
             </div>
 
             <div class="field">
-                <label class="label">Date de début :</label>
+                <label class="label">Date et heure de début :</label>
                 <div class="control">
-                    <input class="input" type="date" v-model="form.start_date" :placeholder=my_event.start_date required>
+                    <input class="input" type="datetime-local" v-model="form.start_date" :placeholder=my_event.start_date
+                        required>
                 </div>
             </div>
 
             <div class="field">
-                <label class="label">Date de fin :</label>
+                <label class="label">Date et heure de fin :</label>
                 <div class="control">
-                    <input class="input" type="date" v-model="form.end_date" :placeholder=my_event.end_date required>
+                    <input class="input" type="datetime-local" v-model="form.end_date" :placeholder=my_event.end_date
+                        required>
                 </div>
             </div>
 
@@ -40,7 +42,43 @@
 
     </div>
 </template>
-  
+
+<script setup>
+import router from '../../router'
+import moment from 'moment'
+import { reactive } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
+
+const props = defineProps({
+    my_event: {
+        type: Object,
+        required: true
+    }
+})
+
+const form = reactive({
+    title: '',
+    description: '',
+    start_date: '',
+    end_date: '',
+})
+
+const goBack = () => {
+    router.go(-1)
+}
+
+const updateEvent = () => {
+    const eventId = props.my_event.id
+    const start_date = moment(form.start_date).format()
+    const end_date = moment(form.end_date).format()
+    Inertia.put(`/update/event/${eventId}`, { id: eventId, ...form, start_date, end_date })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+
+</script>
+
 <style>
 .event-update {
     padding: 20px;
@@ -91,36 +129,3 @@
     color: #000;
 }
 </style>
-
-  
-<script setup>
-import router from '../../router'
-import { reactive } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-
-const props = defineProps({
-    my_event: {
-        type: Object,
-        required: true
-    }
-})
-const form = reactive({
-    title: '',
-    description: '',
-    start_date: '',
-    end_date: '',
-})
-
-const goBack = () => {
-    router.go(-1)
-}
-
-const updateEvent = () => {
-    const eventId = props.my_event.id
-    Inertia.put(`/update/event/${eventId}`, { id: eventId, ...form })
-        .catch((error) => {
-            console.log(error)
-        })
-}
-
-</script>

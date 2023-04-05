@@ -1,11 +1,11 @@
 <template>
     <div class="event-index">
         <h2>Liste des événements</h2>
-
         <div class="add-event">
-            <button class="button is-success" @click="addEvent">Ajouter un événement</button>
+            <button class="button is-success" @click="toggleCreateModal">
+                Ajouter un événement
+            </button>
         </div>
-
 
         <table>
             <thead>
@@ -17,23 +17,84 @@
                     <th>Action</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr v-for="my_event in my_events" :key="my_event.id">
                     <td>{{ my_event.title }}</td>
-                    <td>{{ my_event.start_date }}</td>
-                    <td>{{ my_event.end_date }}</td>
+                    <td>{{ moment(my_event.start_date).add(3, 'days').calendar() }}</td>
+                    <td>{{ moment(my_event.end_date).add(3, 'days').calendar() }}</td>
                     <td>{{ my_event.description }}</td>
                     <td>
-                        <button class="button is-warning" @click="editEvent(my_event.id)">Modifier</button>
+                        <button class="button is-warning" @click="editEvent(my_event.id)"> Modifier</button>
                         <button class="button is-info" @click="showEvent(my_event.id)">Voir</button>
                         <button class="button is-danger" @click="deleteEvent(my_event.id)">Supprimer</button>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="modal" :class="{ 'is-active': createModal }" @click.self="toggleCreateModal">
+            <div class="modal-background" @click="toggleCreateModal"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Ajouter un événement</p>
+                    <button class="delete" aria-label="close" @click="toggleCreateModal">
+                        Fermer
+                    </button>
+                </header>
+                <section class="modal-card-body">
+                    <CreateEvent />
+                </section>
+            </div>
+        </div>
     </div>
-</template>
+</template> 
   
+<script setup>
+import router from '../../router'
+import { defineProps, ref } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
+import moment from 'moment'
+import CreateEvent from './Create.vue'
+import ShowEvent from './Show.vue'
+
+const props = defineProps({
+    my_events: {
+        type: Array,
+        required: true,
+    },
+})
+
+const createModal = ref(false)
+const showEventModal = ref(false)
+const selectedEvent = ref(null)
+
+const editEvent = (eventId) => {
+    router.push('/update/event/' + eventId).then(() => {
+        location.reload()
+    })
+}
+
+const showEvent = (eventId) => {
+    router.push('/event/' + eventId).then(() => {
+        location.reload()
+    })
+}
+
+const deleteEvent = (eventId) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+        Inertia.delete(`/events/${eventId}`).then(() => {
+            location.reload()
+        })
+    }
+}
+
+const toggleCreateModal = () => {
+    createModal.value = !createModal.value
+}
+
+</script>
+
 <style scoped>
 .crud-container {
     margin: 20px auto;
@@ -180,50 +241,30 @@ td:last-child {
 .form-group input[type="submit"]:hover {
     background-color: #38a169;
 }
+
+.modal {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+.modal.is-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-card {
+    width: 50%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 3px;
+    overflow: hidden;
+}
 </style>
-  
-<script setup>
-import router from '../../router'
-import { defineProps } from 'vue'
-import { Inertia } from '@inertiajs/inertia'
-
-const props = defineProps({
-    my_events: {
-        type: Array,
-        required: true
-    }
-})
-const showEvent = (eventId) => {
-    router.push({ path: `/event/${eventId}` })
-        .then(() => {
-            // rafraîchir la page après modification
-            location.reload();
-        })
-}
-
-const editEvent = (eventId) => {
-    router.push('/update/event/' + eventId)
-        .then(() => {
-            location.reload();
-        });
-}
-
-const deleteEvent = (eventId) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-        Inertia.delete(`/events/${eventId}`)
-            .then(() => {
-                // rafraîchir la page après suppression
-                location.reload();
-            });
-    }
-}
-
-const addEvent = () => {
-    router.push({ path: '/add/event' })
-        .then(() => {
-            location.reload();
-        });
-}
-
-</script>
   

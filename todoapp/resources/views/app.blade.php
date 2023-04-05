@@ -10,10 +10,11 @@
 
 <body>
   <div>
-  <Index :event="event"/>
+    <Index :event="event" />
     <Show />
-    <Create/>
-    <Update/>
+    <Create />
+    <Update />
+    <DateRangePicker />
   </div>
   @inertia
 </body>

@@ -6,28 +6,28 @@
             <div class="field">
                 <label class="label">Titre</label>
                 <div class="control">
-                    <input class="input" type="text" v-model="form.title" required>
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Date de début</label>
-                <div class="control">
-                    <input class="input" type="date" v-model="form.start_date" required>
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Date de fin</label>
-                <div class="control">
-                    <input class="input" type="date" v-model="form.end_date" required>
+                    <input class="input" type="text" placeholder="Titre d'évènement" v-model="form.title" required>
                 </div>
             </div>
 
             <div class="field">
                 <label class="label">Description</label>
                 <div class="control">
-                    <textarea class="textarea" v-model="form.description" required></textarea>
+                    <textarea class="textarea" placeholder="Description" v-model="form.description" required></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Date et heure de début</label>
+                <div class="control">
+                    <input class="input" type="datetime-local" v-model="form.start_date" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Date et heure de fin</label>
+                <div class="control">
+                    <input class="input" type="datetime-local" v-model="form.end_date" required>
                 </div>
             </div>
 
@@ -45,6 +45,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
+import moment from 'moment'
 import router from '../../router'
 
 const form = reactive({
@@ -56,6 +57,10 @@ const form = reactive({
 
 const submitForm = () => {
     if (form.title && form.start_date && form.end_date && form.description) {
+        // formate la date de début et de fin à l'aide de Moment.js
+        form.start_date =moment(form.start_date).format(); 
+        form.end_date = moment(form.end_date).format();
+
         Inertia.post('/add/event', form)
     }
 }
@@ -122,6 +127,11 @@ const goBack = () => {
 
 .button-group button:last-child {
     margin-right: 0;
+}
+
+.event-create .button-group .button.is-info {
+    background-color: #f7d025;
+    color: #000;
 }
 </style>
   

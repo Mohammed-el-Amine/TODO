@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Show from './Pages/Event/Show.vue'
 import Index from './Pages/Event/Index.vue'
-import  Update  from './Pages/Event/Update.vue';
+import Update from './Pages/Event/Update.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -10,7 +10,7 @@ const router = createRouter({
     { path: '/event' },
     { path: '/add/event' },
     { path: '/', component: Index },
-    { path: '/update/event/:id',component: Update}
+    { path: '/update/event/:id', component: Update }
   ]
 });
 

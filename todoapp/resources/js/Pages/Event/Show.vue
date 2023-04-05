@@ -2,9 +2,9 @@
   <div class="event-show">
     <p>Vue d'un évènement</p>
     <h2>{{ my_event ? my_event.title : 'Aucun événement trouvé' }}</h2>
-    <p>Date de début : {{ my_event ? my_event.start_date : 'Inconnue' }}</p>
+    <p>Date de début : {{ my_event ? formatDate(my_event.start_date) : 'Inconnue' }}</p>
     <p>{{ my_event ? my_event.description : 'Aucune description disponible' }}</p>
-    <p>Date de fin : {{ my_event ? my_event.end_date : 'Inconnue' }}</p>
+    <p>Date de fin : {{ my_event ? formatEndDate(my_event.end_date) : 'Inconnue' }}</p>
 
     <div class="button-group">
       <button class="button is-primary" @click="goBack">Retour</button>
@@ -14,6 +14,43 @@
 
   </div>
 </template>
+
+<script setup>
+import moment from 'moment';
+import router from '../../router'
+import { Inertia } from '@inertiajs/inertia'
+
+const props = defineProps({ my_event: Object })
+
+const formatDate = (dateString) => {
+  return moment(dateString).add(3, 'days').calendar(); // avril 5 2023, 3:18:00 pm
+}
+const formatEndDate = (EndDateString) => {
+  return moment(EndDateString).add(3, 'days').calendar(); // avril 5 2023, 3:18:00 pm
+}
+
+const deleteEvent = (eventId) => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
+    Inertia.delete(`/events/${eventId}`)
+      .then(() => {
+        goBack()
+      });
+  }
+};
+
+const editEvent = (eventId) => {
+  router.push({ path: `/update/event/${eventId}` })
+    .then(() => {
+      // rafraîchir la page après modification
+      location.reload();
+    })
+}
+
+const goBack = () => {
+  router.go(-1)
+}
+</script>
+
 <style>
 .event-show {
   padding: 20px;
@@ -64,31 +101,3 @@
   border: none;
 }
 </style>
-
-<script setup>
-import router from '../../router'
-import { Inertia } from '@inertiajs/inertia'
-
-const props = defineProps({ my_event: Object })
-
-const deleteEvent = (eventId) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-    Inertia.delete(`/events/${eventId}`)
-      .then(() => {
-        goBack()
-      });
-  }
-};
-
-const editEvent = (eventId) => {
-  router.push({ path: `/update/event/${eventId}` })
-    .then(() => {
-      // rafraîchir la page après modification
-      location.reload();
-    })
-}
-
-const goBack = () => {
-  router.go(-1)
-}
-</script>

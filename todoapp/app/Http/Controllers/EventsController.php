@@ -42,10 +42,11 @@ class EventsController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        Event::create($validatedData);
+        $event = Event::create($validatedData);
 
-        return redirect()->route('events.index')->with('success', 'L\'évènement crée avec succès!');
+        return Inertia::render('Event/Index');
     }
+
 
     public function destroy($id)
     {
@@ -54,11 +55,11 @@ class EventsController extends Controller
         if (!$my_event) {
             abort(404);
         }
+
         $my_event->delete();
 
-        return redirect()->route('events.index')->with('success', 'L\'événement a été supprimé avec succès.');
+        return Inertia::location(route('events.index'));
     }
-
     public function update(Request $request, $id)
     {
         $my_event = Event::find($id);
@@ -75,7 +76,7 @@ class EventsController extends Controller
 
         $my_event->update($validatedData);
 
-        return redirect()->route('events.show', ['id' => $my_event->id])->with('success', 'L\'événement a été mis à jour avec succès.');
+        return Inertia::location(route('events.show', ['id' => $my_event->id]));
     }
 
     public function edit($id)
@@ -86,5 +87,17 @@ class EventsController extends Controller
             abort(404);
         }
         return Inertia::render('Event/Update', ['my_event' => $my_event]);
+    }
+
+    public function getEventsByDateRange(Request $request)
+    {
+        $validatedData = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $events = Event::whereBetween('start_date', [$validatedData['start_date'], $validatedData['end_date']])->get();
+
+        return Inertia::render('Event/Index', ["my_events" => $events]);
     }
 }
