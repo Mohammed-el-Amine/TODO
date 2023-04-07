@@ -1,10 +1,15 @@
 <template>
     <div class="event-index">
         <h2>Liste des événements</h2>
+
         <div class="add-event">
             <button class="button is-success" @click="toggleCreateModal">
                 Ajouter un événement
             </button>
+        </div>
+
+        <div>
+            <DateRangePickerEvent />
         </div>
 
         <table>
@@ -25,8 +30,12 @@
                     <td>{{ moment(my_event.end_date).add(3, 'days').calendar() }}</td>
                     <td>{{ my_event.description }}</td>
                     <td>
-                        <button class="button is-warning" @click="editEvent(my_event.id)"> Modifier</button>
-                        <button class="button is-info" @click="showEvent(my_event.id)">Voir</button>
+                        <button class="button is-info" @click="showEvent(my_event.id)">voir</button>
+
+                        <div class="show-event">
+                            <button class="button is-warning" @click="toggleEditModal(my_event)">Modifier</button>
+                        </div>
+
                         <button class="button is-danger" @click="deleteEvent(my_event.id)">Supprimer</button>
                     </td>
                 </tr>
@@ -47,6 +56,22 @@
                 </section>
             </div>
         </div>
+
+        <div class="modal" :class="{ 'is-active': showModal }" @click.self="toggleEditModal">
+            <div class="modal-background" @click="toggleEditModal"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Modifier un évènement</p>
+                    <button class="delete" aria-label="close" @click="toggleEditModal">
+                        Fermer
+                    </button>
+                </header>
+                <section class="modal-card-body">
+                    <Update :my_event="tmp" />
+                </section>
+            </div>
+        </div>
+
     </div>
 </template> 
   
@@ -56,7 +81,8 @@ import { defineProps, ref } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import moment from 'moment'
 import CreateEvent from './Create.vue'
-import ShowEvent from './Show.vue'
+import Update from './Update.vue'
+import DateRangePickerEvent from './DateRangePicker.vue';
 
 const props = defineProps({
     my_events: {
@@ -65,15 +91,10 @@ const props = defineProps({
     },
 })
 
+let tmp = ref({});
 const createModal = ref(false)
-const showEventModal = ref(false)
+const showModal = ref(false)
 const selectedEvent = ref(null)
-
-const editEvent = (eventId) => {
-    router.push('/update/event/' + eventId).then(() => {
-        location.reload()
-    })
-}
 
 const showEvent = (eventId) => {
     router.push('/event/' + eventId).then(() => {
@@ -91,6 +112,12 @@ const deleteEvent = (eventId) => {
 
 const toggleCreateModal = () => {
     createModal.value = !createModal.value
+}
+
+const toggleEditModal = (eventId) => {
+    showModal.value = !showModal.value
+    tmp.value = eventId
+    router.push('update/event/' + eventId)
 }
 
 </script>

@@ -23,10 +23,10 @@ import { Inertia } from '@inertiajs/inertia'
 const props = defineProps({ my_event: Object })
 
 const formatDate = (dateString) => {
-  return moment(dateString).add(3, 'days').calendar(); // avril 5 2023, 3:18:00 pm
+  return moment(dateString).add(3, 'days').calendar();
 }
 const formatEndDate = (EndDateString) => {
-  return moment(EndDateString).add(3, 'days').calendar(); // avril 5 2023, 3:18:00 pm
+  return moment(EndDateString).add(3, 'days').calendar();
 }
 
 const deleteEvent = (eventId) => {
@@ -41,7 +41,6 @@ const deleteEvent = (eventId) => {
 const editEvent = (eventId) => {
   router.push({ path: `/update/event/${eventId}` })
     .then(() => {
-      // rafraîchir la page après modification
       location.reload();
     })
 }

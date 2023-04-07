@@ -7,9 +7,9 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/event/:id', component: Show },
-    { path: '/event' },
+    { path: '/event', component: Index },
     { path: '/add/event' },
-    { path: '/', component: Index },
+    { path: '/', component: Index},
     { path: '/update/event/:id', component: Update }
   ]
 });
