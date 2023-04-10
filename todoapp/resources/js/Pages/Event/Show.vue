@@ -19,14 +19,15 @@
 import moment from 'moment';
 import router from '../../router'
 import { Inertia } from '@inertiajs/inertia'
+moment.locale('fr')
 
 const props = defineProps({ my_event: Object })
 
 const formatDate = (dateString) => {
-  return moment(dateString).add(3, 'days').calendar();
+  return moment(dateString).local().format('D MMMM YYYY à HH:mm');
 }
 const formatEndDate = (EndDateString) => {
-  return moment(EndDateString).add(3, 'days').calendar();
+  return moment(EndDateString).local().format('D MMMM YYYY à HH:mm');
 }
 
 const deleteEvent = (eventId) => {

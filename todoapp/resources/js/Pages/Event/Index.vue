@@ -26,8 +26,8 @@
             <tbody>
                 <tr v-for="my_event in my_events" :key="my_event.id">
                     <td>{{ my_event.title }}</td>
-                    <td>{{ moment(my_event.start_date).add(3, 'days').calendar() }}</td>
-                    <td>{{ moment(my_event.end_date).add(3, 'days').calendar() }}</td>
+                    <td>{{ moment(my_event.start_date).local().format('D MMMM YYYY à HH:mm') }}</td>
+                    <td>{{ moment(my_event.end_date).local().format('D MMMM YYYY à HH:mm') }}</td>
                     <td>{{ my_event.description }}</td>
                     <td>
                         <button class="button is-info" @click="showEvent(my_event.id)">voir</button>
@@ -67,7 +67,7 @@
                     </button>
                 </header>
                 <section class="modal-card-body">
-                    <Update :my_event="tmp" />
+                    <Update :my_event="event" />
                 </section>
             </div>
         </div>
@@ -83,6 +83,7 @@ import moment from 'moment'
 import CreateEvent from './Create.vue'
 import Update from './Update.vue'
 import DateRangePickerEvent from './DateRangePicker.vue';
+moment.locale('fr')
 
 const props = defineProps({
     my_events: {
@@ -91,10 +92,9 @@ const props = defineProps({
     },
 })
 
-let tmp = ref({});
+const event = ref({});
 const createModal = ref(false)
 const showModal = ref(false)
-const selectedEvent = ref(null)
 
 const showEvent = (eventId) => {
     router.push('/event/' + eventId).then(() => {
@@ -116,7 +116,7 @@ const toggleCreateModal = () => {
 
 const toggleEditModal = (eventId) => {
     showModal.value = !showModal.value
-    tmp.value = eventId
+    event.value = eventId
     router.push('update/event/' + eventId)
 }
 
