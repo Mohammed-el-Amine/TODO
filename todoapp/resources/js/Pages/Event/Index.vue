@@ -30,7 +30,7 @@
                     <td>{{ moment(my_event.end_date).local().format('D MMMM YYYY à HH:mm') }}</td>
                     <td>{{ my_event.description }}</td>
                     <td>
-                        <button class="button is-info" @click="showEvent(my_event.id)">voir</button>
+                        <button class="button is-info" @click="toggleShowModal(my_event.id)">voir</button>
 
                         <div class="show-event">
                             <button class="button is-warning" @click="toggleEditModal(my_event)">Modifier</button>
@@ -42,11 +42,12 @@
             </tbody>
         </table>
 
+        <!-- MODAL -->
+
         <div class="modal" :class="{ 'is-active': createModal }" @click.self="toggleCreateModal">
             <div class="modal-background" @click="toggleCreateModal"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Ajouter un événement</p>
                     <button class="delete" aria-label="close" @click="toggleCreateModal">
                         Fermer
                     </button>
@@ -57,17 +58,30 @@
             </div>
         </div>
 
-        <div class="modal" :class="{ 'is-active': showModal }" @click.self="toggleEditModal">
+        <div class="modal" :class="{ 'is-active': editModal }" @click.self="toggleEditModal">
             <div class="modal-background" @click="toggleEditModal"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Modifier un évènement</p>
                     <button class="delete" aria-label="close" @click="toggleEditModal">
                         Fermer
                     </button>
                 </header>
                 <section class="modal-card-body">
                     <Update :my_event="event" />
+                </section>
+            </div>
+        </div>
+
+        <div class="modal" :class="{ 'is-active': showModal }" @click.self="toggleShowModal">
+            <div class="modal-background" @click="toggleShowModal"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <button class="delete" aria-label="close" @click="toggleShowModal">
+                        Fermer
+                    </button>
+                </header>
+                <section class="modal-card-body">
+                    <Show :my_event="event" />
                 </section>
             </div>
         </div>
@@ -82,6 +96,7 @@ import { Inertia } from '@inertiajs/inertia'
 import moment from 'moment'
 import CreateEvent from './Create.vue'
 import Update from './Update.vue'
+import Show from './Show.vue'
 import DateRangePickerEvent from './DateRangePicker.vue';
 moment.locale('fr')
 
@@ -94,13 +109,8 @@ const props = defineProps({
 
 const event = ref({});
 const createModal = ref(false)
+const editModal = ref(false)
 const showModal = ref(false)
-
-const showEvent = (eventId) => {
-    router.push('/event/' + eventId).then(() => {
-        location.reload()
-    })
-}
 
 const deleteEvent = (eventId) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
@@ -115,9 +125,15 @@ const toggleCreateModal = () => {
 }
 
 const toggleEditModal = (eventId) => {
+    editModal.value = !editModal.value
+    event.value = eventId
+    router.push({ path: 'update/event/' + eventId, replace: true })
+}
+
+const toggleShowModal = (eventId) => {
     showModal.value = !showModal.value
     event.value = eventId
-    router.push('update/event/' + eventId)
+    router.push({ path: '/event/' + eventId, replace: true })
 }
 
 </script>

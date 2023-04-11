@@ -7,7 +7,6 @@
     <p>Date de fin : {{ my_event ? formatEndDate(my_event.end_date) : 'Inconnue' }}</p>
 
     <div class="button-group">
-      <button class="button is-primary" @click="goBack">Retour</button>
       <button class="button is-danger" @click="deleteEvent(my_event.id)">Supprimer</button>
       <button class="button is-warning" @click="editEvent(my_event.id)">Modifier</button>
     </div>
@@ -34,7 +33,6 @@ const deleteEvent = (eventId) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
     Inertia.delete(`/events/${eventId}`)
       .then(() => {
-        goBack()
       });
   }
 };
@@ -44,10 +42,6 @@ const editEvent = (eventId) => {
     .then(() => {
       location.reload();
     })
-}
-
-const goBack = () => {
-  router.go(-1)
 }
 </script>
 

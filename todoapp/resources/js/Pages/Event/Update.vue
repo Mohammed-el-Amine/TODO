@@ -35,7 +35,6 @@
             </div>
 
             <div class="button-group">
-                <button class="button is-info" @click="goBack">Retour</button>
                 <button class="button is-warning" type="submit">Modifier</button>
             </div>
         </form>
@@ -44,7 +43,6 @@
 </template>
 
 <script setup>
-import router from '../../router'
 import moment from 'moment'
 import { reactive } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
@@ -62,10 +60,6 @@ const form = reactive({
     start_date: '',
     end_date: '',
 })
-
-const goBack = () => {
-    router.go(-1)
-}
 
 const updateEvent = () => {
     const eventId = props.my_event.id

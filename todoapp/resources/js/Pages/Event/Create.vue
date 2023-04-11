@@ -33,11 +33,9 @@
 
             <div class="button-group">
                 <button class="button is-primary">Créer</button>
-                <button class="button is-info" @click="goBack">Retour</button>
             </div>
 
         </form>
-
 
     </div>
 </template>
@@ -57,17 +55,13 @@ const form = reactive({
 
 const submitForm = () => {
     if (form.title && form.start_date && form.end_date && form.description) {
-        // formate la date de début et de fin à l'aide de Moment.js
-        form.start_date =moment(form.start_date).format(); 
+        form.start_date = moment(form.start_date).format();
         form.end_date = moment(form.end_date).format();
 
         Inertia.post('/add/event', form)
     }
 }
 
-const goBack = () => {
-    router.go(-1)
-}
 </script>
   
 <style>
