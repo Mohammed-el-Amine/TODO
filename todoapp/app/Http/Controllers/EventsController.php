@@ -76,7 +76,7 @@ class EventsController extends Controller
 
         $my_event->update($validatedData);
 
-        return Inertia::location(route('events.show', ['id' => $my_event->id]));
+        return Inertia::location(route('events.index'));
     }
 
     public function edit($id)
