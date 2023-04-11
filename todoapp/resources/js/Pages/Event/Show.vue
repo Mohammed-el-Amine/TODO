@@ -1,5 +1,6 @@
 <template>
   <div class="event-show">
+
     <p>Vue d'un évènement</p>
     <h2>{{ my_event ? my_event.title : 'Aucun événement trouvé' }}</h2>
     <p>Date de début : {{ my_event ? formatDate(my_event.start_date) : 'Inconnue' }}</p>
@@ -8,7 +9,6 @@
 
     <div class="button-group">
       <button class="button is-danger" @click="deleteEvent(my_event.id)">Supprimer</button>
-      <button class="button is-warning" @click="editEvent(my_event.id)">Modifier</button>
     </div>
 
   </div>
@@ -16,7 +16,6 @@
 
 <script setup>
 import moment from 'moment';
-import router from '../../router'
 import { Inertia } from '@inertiajs/inertia'
 moment.locale('fr')
 
@@ -32,17 +31,8 @@ const formatEndDate = (EndDateString) => {
 const deleteEvent = (eventId) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
     Inertia.delete(`/events/${eventId}`)
-      .then(() => {
-      });
   }
 };
-
-const editEvent = (eventId) => {
-  router.push({ path: `/update/event/${eventId}` })
-    .then(() => {
-      location.reload();
-    })
-}
 </script>
 
 <style>

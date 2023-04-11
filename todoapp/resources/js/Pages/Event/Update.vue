@@ -80,15 +80,16 @@ const updateEvent = () => {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
-    text-align: center;
+    text-align: left;
 }
 
 .event-update h2 {
     font-size: 2rem;
     margin-top: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .event-update .field {
@@ -98,6 +99,8 @@ const updateEvent = () => {
 .event-update .label {
     font-weight: bold;
     font-size: 1.2rem;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .event-update .input,
@@ -110,7 +113,30 @@ const updateEvent = () => {
 }
 
 .event-update .button-group {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
+}
+
+.event-update .button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.event-update .button.is-warning {
+    background-color: #ffdd57;
+    color: #000;
+}
+
+.event-update button.is-warning:hover {
+    background-color: #ffc107;
 }
 
 .event-update .button.is-info {
@@ -118,8 +144,14 @@ const updateEvent = () => {
     color: #fff;
 }
 
-.event-update .button.is-warning {
-    background-color: #ffdd57;
-    color: #000;
+.event-update button.is-info:hover {
+    background-color: #007bff;
 }
-</style>
+
+@media screen and (max-width: 768px) {
+    .event-update {
+        max-width: 100%;
+        padding: 10px;
+    }
+}
+</style> 
